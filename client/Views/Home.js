@@ -7,13 +7,18 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Image,
 } from "react-native";
 
 export default function Home({ navigation }) {
-  const [name, setName] = useState("");
-  const [age, setAge] = useState(0);
-  const [gender, setGender] = useState("");
+  // const [name, setName] = useState("");
+  // const [age, setAge] = useState(0);
+  // const [gender, setGender] = useState("");
   const [array, setArray] = useState([]);
+
+  const [title, setTitle] = useState("");
+  const [image, setImage] = useState("");
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     axios.get("http://localhost:3001/read").then((res) => {
@@ -23,34 +28,33 @@ export default function Home({ navigation }) {
 
   function handleCreateButton() {
     const data = {
-      name: name,
-      age: age,
-      gender: gender,
+      title: title,
+      image: image,
+      description: description,
     };
     axios.post("http://localhost:3001/create", data).then(() => {
-      console.log("Pessoa criada");
+      console.log("Post criado");
     });
   }
 
   function handleViewButton(_id) {
     navigation.navigate("ReadOne", { id: _id });
-    console.log(_id);
   }
   return (
     <View style={styles.container}>
-      <Text>Nome: </Text>
+      <Text>Título: </Text>
       <TextInput
-        onChangeText={(newText) => setName(newText)}
+        onChangeText={(newText) => setTitle(newText)}
         style={styles.input}
       />
-      <Text>Idade: </Text>
+      <Text>Url da Imagem: </Text>
       <TextInput
-        onChangeText={(newText) => setAge(newText)}
+        onChangeText={(newText) => setImage(newText)}
         style={styles.input}
       />
-      <Text>Gênero: </Text>
+      <Text>Descrição: </Text>
       <TextInput
-        onChangeText={(newText) => setGender(newText)}
+        onChangeText={(newText) => setDescription(newText)}
         style={styles.input}
       />
       <TouchableOpacity onPress={handleCreateButton} style={styles.button}>
@@ -61,9 +65,14 @@ export default function Home({ navigation }) {
           return (
             <View style={styles.item} key={x._id}>
               <ul>
-                <li>{x.name}</li>
-                <li>{x.age}</li>
-                <li>{x.gender}</li>
+                <li>{x.title}</li>
+                <Image
+                  style={{ width: 100, height: 100 }}
+                  source={{
+                    uri: x.image,
+                  }}
+                />
+                <li>{x.description}</li>
               </ul>
               <View style={styles.display}>
                 <TouchableOpacity style={styles.button}>
@@ -86,6 +95,7 @@ export default function Home({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 210,
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
@@ -110,6 +120,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderColor: "#000",
     margin: 8,
-    padding: 24
+    padding: 24,
   },
 });

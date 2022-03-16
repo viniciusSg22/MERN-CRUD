@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const PI = require("./models/People");
+const PM = require("./models/Post");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -21,36 +22,35 @@ mongoose
   .catch((err) => console.log(err));
 
 app.get("/read", async (req, res) => {
-  PI.find({}).then((people) => {
-    res.send(people);
+  PM.find({}).then((post) => {
+    res.send(post);
   });
 });
 
 app.get("/readOne/:_id", async (req, res) => {
-  PI.findById({ _id: req.params._id }).then((people) => {
-    res.send(people);
+  PM.findById({ _id: req.params._id }).then((post) => {
+    res.send(post);
   });
 });
 
 app.post("/create", async (req, res) => {
-  PI.create(req.body).then((people) => {
-    res.send(people);
+  console.log(req.body)
+  PM.create(req.body).then((post) => {
+    res.send(post);
   });
 });
 
 app.put("/update/:_id", async (req, res) => {
-  let _id = "622ba5f17314d126cd6239af";
-  PI.findByIdAndUpdate({ _id: req.params._id }, req.body).then(() => {
-    PI.findOne({ _id: req.params._id }).then((people) => {
+  PM.findByIdAndUpdate({ _id: req.params._id }, req.body).then(() => {
+    PM.findOne({ _id: req.params._id }).then((people) => {
       res.send(people);
     });
   });
 });
 
 app.delete("/delete/:_id", async (req, res) => {
-  let _id = "622ba5f17314d126cd6239af";
-  PI.findByIdAndDelete({ _id: req.params._id }).then(() => {
-    res.send("People deleted");
+  PM.findByIdAndDelete({ _id: req.params._id }).then(() => {
+    res.send("Post deleted");
   });
 });
 
